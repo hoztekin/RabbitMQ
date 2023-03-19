@@ -22,13 +22,14 @@ namespace Consumer
 
 			//Queuedaki mesajı okuma
 			EventingBasicConsumer consumer = new(channel);
-			channel.BasicConsume(queue: "example-queue", false, consumer ); //AutoAck mesaj okunduktan sonra kuyruktan silinip silinmemesi için kullanılan parametredir.
+			channel.BasicConsume(queue: "example-queue", autoAck:false, consumer : consumer ); //AutoAck mesaj onaylama sürecini aktifleştirmek için cunsomer uygulamasında autoack parametresine false değerinin getirilmesiyle sağlanır.
 			consumer.Received += (sender, e) =>
 			{
 				//Kuyruğa gelen mesajın işlendiği yer
 				//e.body: Kuyruktaki mesajın verisini bütünsel olarak getirecektir.
 				//e.Body.Span veya e.body.ToArray() kuyruktaki mesajı byte olarak bize verecektir.
 				Console.WriteLine(Encoding.UTF8.GetString(e.Body.Span));
+				channel.BasicAck(deliveryTag: e.DeliveryTag, multiple: false);
 			};
 			Console.ReadLine();
 		}
