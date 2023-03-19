@@ -17,12 +17,16 @@ namespace Consumer
 			using IModel channel = connection.CreateModel();
 
 			//Queue Oluşturma
-			channel.QueueDeclare(queue: "example-queue", exclusive: false); //Cunsomerdaki kuyruk publisher ile aynı olmalıdır.
+			channel.QueueDeclare(queue: "example-queue", exclusive: false, durable: true); //Cunsomerdaki kuyruk publisher ile aynı olmalıdır.
+			
 
 
 			//Queuedaki mesajı okuma
 			EventingBasicConsumer consumer = new(channel);
 			channel.BasicConsume(queue: "example-queue", autoAck:false, consumer : consumer ); //AutoAck mesaj onaylama sürecini aktifleştirmek için cunsomer uygulamasında autoack parametresine false değerinin getirilmesiyle sağlanır.
+			channel.BasicQos(0, 1, false); //Cunsomerlara eşit şekilde paylaşım yapılmasını sağlar
+
+
 			consumer.Received += (sender, e) =>
 			{
 				//Kuyruğa gelen mesajın işlendiği yer

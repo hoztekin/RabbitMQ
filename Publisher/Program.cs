@@ -27,7 +27,12 @@ namespace Publisher
 
 
 			//Queue Oluşturma
-			channel.QueueDeclare(queue: "example-queue", exclusive:false);
+			channel.QueueDeclare(queue: "example-queue", exclusive:false,  durable: true); //durable mesajların kalıcı olarak kaybolmaması için kuyruk konfigürasyonudur.
+
+			//Mesajın kalıcı olması mesaj bölümü konfigürasyonudur.
+			IBasicProperties properties = channel.CreateBasicProperties();
+			properties.Persistent = true; 
+
 
 			//Queue'ya mesaj gönderme
 
